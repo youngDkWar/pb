@@ -6,6 +6,44 @@ from .models import *
 
 def create_field(request):
     """
+    :param request:
+        {
+            "fields":
+            [
+                {
+                    "name": "test1",
+                    "author": "Kirill"
+                },
+                {
+                    "name": "test2",
+                    "author": "Kirill"
+                }
+            ]
+        }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    utc = pytz.UTC
+    request_time = (datetime.now()).replace(tzinfo=utc)
+    data = request.data
+    if data['fields']:
+        for e in data['fields']:
+            Field(
+                name=e['name'],
+                author=e['author'],
+                create_dt=request_time
+                ).save()
+        response['status'] = "ok"
+    else:
+        response['status'] = "ERROR: Empty fields"
+    return response
+
+
+def get_field(request):
+    """
     :param request: {}
     :return:
         {
@@ -18,12 +56,13 @@ def create_field(request):
     for e in fields:
         response["fields"].append(
             {
+                "id": e.id,
                 "name": e.name,
                 "create_dt": e.create_dt,
                 "author": e.author
             }
         )
-    response = {"status": "ok"}
+    response['status'] = "ok"
     return response
 
 
@@ -70,4 +109,29 @@ def create_agent(request):
             response['status'] = "ERROR: Empty agents"
     else:
         response['status'] = "Field dont exist"
+    return response
+
+
+def get_agent(request):
+    """
+    :param request: { field: <id> }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    id = request.GET["id"][0]
+    agents = Agent.objects.filter(field=id)
+    response["agents"] = []
+    for e in agents:
+        response["agents"].append(
+            {
+                "id": e.id,
+                "name": e.name,
+                "create_dt": e.create_dt,
+                "author": e.author
+            }
+        )
+    response['status'] = "ok"
     return response

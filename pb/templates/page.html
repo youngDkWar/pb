@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Продукционная база</title>
+    <style>
+        body {
+            background-color: #bfd4ca; /* Пастельный изумрудный цвет фона */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #text1, #text2, button {
+            border-radius: 8px; /* Скругленные углы для полей ввода и кнопки */
+            padding: 10px;
+            margin: 10px;
+            box-sizing: border-box;
+        }
+
+        div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50%;
+        }
+
+        #save_json {
+            width: 25%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        input, button {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            margin-bottom: 10px;
+        }
+
+        th {
+            text-align: center;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #5b6c5c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #839a84;
+        }
+    </style>
+</head>
+<body>
+    <div id="input_data">
+        <input type="text" id="text1" placeholder="Если">
+        <input type="text" id="text2" placeholder="то">
+
+        <button onclick="addInTable()">Добавить</button>
+    </div>
+    <div id="save_json">
+        <button onclick="save_json()">Сохранить правила</button>
+        
+    </div>
+    <div id="table">
+        <p id="status"></p>
+        <table id="myTable">
+            <tr>
+                <th>Если</th>
+                <th>То</th>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        function addInTable() {
+            var text1 = document.getElementById("text1").value;
+            var text2 = document.getElementById("text2").value;
+
+            if (text1 !== "" && text2 !== "") {
+                var table = document.getElementById("myTable");
+                var row = table.insertRow(-1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+
+                cell1.innerHTML = text1;
+                cell2.innerHTML = text2;
+
+                // Очистим поля ввода после добавления в таблицу
+                document.getElementById("text1").value = "";
+                document.getElementById("text2").value = "";
+            } else {
+                alert("Пожалуйста, заполните оба поля ввода.");
+            }
+        }
+        function save_json() {
+            var data = create_json();
+            var data_JSON = JSON.stringify(data);
+
+            var blob = new Blob([data_JSON], { type: "application/json" });
+            var url = URL.createObjectURL(blob);
+
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = "file.json";
+            document.body.appendChild(a);
+            a.click();
+
+            document.getElementById("status").innerHTML = "Файл сохранен";
+        }
+
+        function create_json() {
+            var data = [];
+            var table = document.getElementById("myTable");
+
+            for (var i = 1; i < table.rows.length; i++) {
+                var row = table.rows[i];
+                var text_1 = row.cells[0].innerHTML;
+                var text_2 = row.cells[1].innerHTML;
+
+                data.push({ "Если": text_1, "То": text_2 });
+            }
+
+            return data;
+        }
+
+    </script>
+
+</body>
+</html>
