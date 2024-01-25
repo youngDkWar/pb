@@ -135,3 +135,149 @@ def get_agent(request):
         )
     response['status'] = "ok"
     return response
+
+
+def create_field_rules(request):
+    """
+    :param request:
+        {
+            "field": <field_id>,
+            "rules":
+            [
+                {
+                    "condition": "if",
+                    "action": "else",
+                    "author": <author>
+                },
+                {
+                    "condition": "if",
+                    "action": "else",
+                    "author": <author>
+                }
+            ]
+        }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    utc = pytz.UTC
+    request_time = (datetime.now()).replace(tzinfo=utc)
+    data = request.data
+    field = Field.objects.filter(id=data['field']).first()
+    if field:
+        if data['rules']:
+            for e in data['rules']:
+                FieldRules(
+                    field=field,
+                    condition=e['condition'],
+                    action=e['action'],
+                    create_dt=request_time,
+                    author=e['author']
+                    ).save()
+            response['status'] = "ok"
+            return response
+        else:
+            response['status'] = "ERROR: Empty rules"
+    else:
+        response['status'] = "ERROR: no field"
+
+
+def get_field_rules(request):
+    """
+    :param request: { field: <id> }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    id = request.GET["id"][0]
+    field_rules = FieldRules.objects.filter(field=id)
+    response["field_rules"] = []
+    for e in field_rules:
+        response["field_rules"].append(
+            {
+                "id": e.id,
+                "condition": e.condition,
+                "action": e.action,
+                "create_dt": e.create_dt,
+                "author": e.author
+            }
+        )
+    response['status'] = "ok"
+    return response
+
+
+def create_agent_rules(request):
+    """
+    :param request:
+        {
+            "agent": <agent_id>,
+            "rules":
+            [
+                {
+                    "condition": "if",
+                    "action": "else",
+                    "author": <author>
+                },
+                {
+                    "condition": "if",
+                    "action": "else",
+                    "author": <author>
+                }
+            ]
+        }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    utc = pytz.UTC
+    request_time = (datetime.now()).replace(tzinfo=utc)
+    data = request.data
+    agent = Agent.objects.filter(id=data['agent']).first()
+    if agent:
+        if data['rules']:
+            for e in data['rules']:
+                AgentRules(
+                    agent=agent,
+                    condition=e['condition'],
+                    action=e['action'],
+                    create_dt=request_time,
+                    author=e['author']
+                    ).save()
+            response['status'] = "ok"
+            return response
+        else:
+            response['status'] = "ERROR: Empty rules"
+    else:
+        response['status'] = "ERROR: no agent"
+
+
+def get_agent_rules(request):
+    """
+    :param request: { agent: <id> }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    id = request.GET["id"][0]
+    agent_rules = AgentRules.objects.filter(agent=id)
+    response["agent_rules"] = []
+    for e in agent_rules:
+        response["agent_rules"].append(
+            {
+                "id": e.id,
+                "condition": e.condition,
+                "action": e.action,
+                "create_dt": e.create_dt,
+                "author": e.author
+            }
+        )
+    response['status'] = "ok"
+    return response
