@@ -15,6 +15,11 @@ def get_field_api(request):
     return Response(data=CRUD.get_field(request), status=200)
 
 
+@api_view(['PATCH'])
+def patch_field_api(request):
+    return Response(data=CRUD.patch_field(request), status=200)
+
+
 @api_view(['POST'])
 def create_agents_api(request):
     return Response(data=CRUD.create_agent(request), status=200)
@@ -23,6 +28,11 @@ def create_agents_api(request):
 @api_view(['GET'])
 def get_agent_api(request):
     return Response(data=CRUD.get_agent(request), status=200)
+
+
+@api_view(['PATCH'])
+def patch_agent_api(request):
+    return Response(data=CRUD.patch_agent(request), status=200)
 
 
 @api_view(['POST'])

@@ -42,6 +42,43 @@ def create_field(request):
     return response
 
 
+def patch_field(request):
+    """
+    :param request:
+        {
+            "fields":
+            [
+                {
+                    "id": 1,
+                    "name": "test1"
+                },
+                {
+                    "id": 2,
+                    "name": "test2"
+                }
+            ]
+        }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    data = request.data
+    if data['fields']:
+        for e in data['fields']:
+            field = Field.objects.filter(id=e['id']).first()
+            if field:
+                field.name = e['name']
+                field.save()
+            else:
+                response['status'] = "Error: no field"
+        response['status'] = "Updated"
+    else:
+        response['status'] = "ERROR: Empty fields"
+    return response
+
+
 def get_field(request):
     """
     :param request: {}
@@ -109,6 +146,45 @@ def create_agent(request):
             response['status'] = "ERROR: Empty agents"
     else:
         response['status'] = "Field dont exist"
+    return response
+
+
+def patch_agent(request):
+    """
+    :param request:
+        {
+            "field": <field_id>,
+            "agents":
+            [
+                {
+                    "id": 1,
+                    "name": "test2"
+                },
+                {
+                    "id": 2,
+                    "name": "test2"
+                }
+            ]
+        }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    data = request.data
+    if data['agents']:
+        for e in data['agents']:
+            agent = Agent.objects.filter(id=e["id"]).first()
+            if agent:
+                agent.name = e["name"]
+                agent.save()
+                response['status'] = "Updated"
+            else:
+                response['status'] = "ERROR: No agents"
+                break
+    else:
+        response['status'] = "ERROR: Empty agents"
     return response
 
 
