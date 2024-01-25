@@ -259,6 +259,46 @@ def create_field_rules(request):
         response['status'] = "ERROR: no field"
 
 
+def patch_field_rules(request):
+    """
+    :param request:
+        {
+            "rules":
+            [
+                {
+                    "id": 1,
+                    "condition": "if",
+                    "action": "else"
+                },
+                {
+                    "id": 2,
+                    "condition": "if",
+                    "action": "else"
+                }
+            ]
+        }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    data = request.data
+    if data['rules']:
+        for e in data['rules']:
+            field_rule = FieldRules.objects.filter(id=e['id']).first()
+            if field_rule:
+                field_rule.condition = e["condition"]
+                field_rule.action = e["action"]
+                field_rule.save()
+                response['status'] = "Updated"
+            else:
+                response['status'] = f"Error: no field rule id={e['id']}"
+        return response
+    else:
+        response['status'] = "ERROR: Empty rules"
+
+
 def get_field_rules(request):
     """
     :param request: { field: <id> }
@@ -356,3 +396,43 @@ def get_agent_rules(request):
         )
     response['status'] = "ok"
     return response
+
+
+def patch_agent_rules(request):
+    """
+    :param request:
+        {
+            "rules":
+            [
+                {
+                    "id": 1,
+                    "condition": "if",
+                    "action": "else"
+                },
+                {
+                    "id": 2,
+                    "condition": "if",
+                    "action": "else"
+                }
+            ]
+        }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    data = request.data
+    if data['rules']:
+        for e in data['rules']:
+            agent_rule = AgentRules.objects.filter(id=e['id']).first()
+            if agent_rule:
+                agent_rule.condition = e["condition"]
+                agent_rule.action = e["action"]
+                agent_rule.save()
+                response['status'] = "Updated"
+            else:
+                response['status'] = f"Error: no field rule id={e['id']}"
+        return response
+    else:
+        response['status'] = "ERROR: Empty rules"

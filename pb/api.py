@@ -45,6 +45,11 @@ def get_field_rules_api(request):
     return Response(data=CRUD.get_field_rules(request), status=200)
 
 
+@api_view(['PATCH'])
+def patch_field_rules_api(request):
+    return Response(data=CRUD.patch_field_rules(request), status=200)
+
+
 @api_view(['POST'])
 def create_agent_rules_api(request):
     return Response(data=CRUD.create_agent_rules(request), status=200)
@@ -53,3 +58,8 @@ def create_agent_rules_api(request):
 @api_view(['GET'])
 def get_agent_rules_api(request):
     return Response(data=CRUD.get_agent_rules(request), status=200)
+
+
+@api_view(['PATCH'])
+def patch_agent_rules_api(request):
+    return Response(data=CRUD.patch_agent_rules(request), status=200)

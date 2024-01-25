@@ -18,6 +18,6 @@ urlpatterns = [
 
     path(f'{api_path}/patch/field', api.patch_field_api),
     path(f'{api_path}/patch/agent', api.patch_agent_api),
-    #path(f'{api_path}/patch/field-rule', api.patch_field_rules_api),
-    #path(f'{api_path}/patch/agent-rule', api.patch_agent_rules_api),
+    path(f'{api_path}/patch/field-rule', api.patch_field_rules_api),
+    path(f'{api_path}/patch/agent-rule', api.patch_agent_rules_api),
 ]
