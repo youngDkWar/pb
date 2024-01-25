@@ -436,3 +436,79 @@ def patch_agent_rules(request):
         return response
     else:
         response['status'] = "ERROR: Empty rules"
+
+
+def delete_field(request):
+    """
+    :param request: { field: <id> }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    id = request.GET["id"][0]
+    field = Field.objects.filter(id=id).first()
+    if field:
+        field.delete()
+        response['status'] = "ok"
+    else:
+        response['status'] = "field not found"
+    return response
+
+
+def delete_agent(request):
+    """
+    :param request: { agent: <id> }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    id = request.GET["id"][0]
+    agent = Agent.objects.filter(id=id).first()
+    if agent:
+        agent.delete()
+        response['status'] = "ok"
+    else:
+        response['status'] = "agent not found"
+    return response
+
+
+def delete_field_rules(request):
+    """
+    :param request: { field_rules: <id> }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    id = request.GET["id"][0]
+    field_rules = FieldRules.objects.filter(id=id).first()
+    if field_rules:
+        field_rules.delete()
+        response['status'] = "ok"
+    else:
+        response['status'] = "field rule not found"
+    return response
+
+
+def delete_agent_rules(request):
+    """
+    :param request: { agent_rules: <id> }
+    :return:
+        {
+            "status": <status>
+        }
+    """
+    response = {"status": "not ok"}
+    id = request.GET["id"][0]
+    agent_rules = AgentRules.objects.filter(id=id).first()
+    if agent_rules:
+        agent_rules.delete()
+        response['status'] = "ok"
+    else:
+        response['status'] = "agent rule not found"
+    return response
