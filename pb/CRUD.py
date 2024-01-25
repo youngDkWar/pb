@@ -153,7 +153,6 @@ def patch_agent(request):
     """
     :param request:
         {
-            "field": <field_id>,
             "agents":
             [
                 {
